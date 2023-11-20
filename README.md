@@ -34,3 +34,12 @@
     * Stuðningar við flokka: nota /categories til að birta flokka á forsíðu og /products?category={id} til að birta vörur á flokkasíðu.
     * Stuðningur við síðuflettingu: nota /products?offset={offset}&limit={limit} til að birta vörur á síðu og hafa síðuflettingu á vörulistasíðu.
     * Stuðningur við leit: með því að nota /products?search={query} og leita þannig í vörum, birta niðurstöður eða ef engar niðurstöður. Geyma skal leit í URL svo hægt sé að leita aftur.
+
+
+## To do
+* gera fall sem sækir
+    * Titil
+    * Mynd
+    * Verð
+    * Heiti flokks
+    * Lýsingu á vöru
