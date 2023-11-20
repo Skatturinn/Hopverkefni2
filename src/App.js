@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 import './App.css';
-// eslint-disable-next-line no-unused-vars
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import {
 	BrowserRouter as Router,
@@ -10,8 +9,6 @@ import {
 	Routes,
 	useParams
 } from 'react-router-dom';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { useAsync } from 'react-async'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import useFetch from 'react-fetch-hook';
 // import { useRouter } from 'router'
@@ -22,15 +19,14 @@ function formatPrice(price) {
 		style: 'currency',
 		currency: 'ISK',
 	});
-
 	return formatter.format(price);
 }
 export default function App() {
 	return (
-		<div className='SiteContainer'>
+		<div className='site-container'>
 			<Router>
 				<header>
-					<nav>
+					<nav className='grid-container'>
 						<h1>
 							<Link to="/">Vefforitunarbúðin</Link>
 						</h1>
@@ -47,7 +43,7 @@ export default function App() {
 						</menu>
 						<menu>
 							<li>
-								<Link to="/nyjar">Nýjar vörur</Link>
+								<Link to="/vara">Nýjar vörur</Link>
 							</li>
 							<li>
 								<Link to="/flokkar">Flokkar</Link>
@@ -57,7 +53,7 @@ export default function App() {
 				</header>
 				<main>
 					<Routes>
-						<Route path="/" element={<Home />} />
+						<Route path="/vara" element={<Vorulisti />} />
 						<Route path="/nyskra" element={<FlokkaSida />} />
 						<Route path="/innskra" element={<FlokkaSida />} />
 						<Route path="/flokkur/:id" element={<FlokkaSida />} />
@@ -185,8 +181,8 @@ function FlokkaSida() {
 function Vorulisti() {
 	return (
 		<div>
-			<h2>Allar vörur</h2>
-			<ProdList teksti={''} />
+			<h2>Nýjar vörur</h2>
+			<ProdList teksti={'?limit=20'} />
 		</div>
 	)
 }

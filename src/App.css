@@ -33,8 +33,23 @@ html {
 	cursor: pointer;
 }
 
+a {
+	text-decoration: none;
+	color: var(--white);
+}
 
+.site-container {
+	display: grid;
+	grid-template-areas: 'header'
+		'main';
+}
+
+.grid-container {
+	display: grid;
+	grid-template-columns: repeat(12, minmax(0, 1fr));
+}
 
 header {
 	background-color: var(--navy);
+	grid-area: 'header';
 }
