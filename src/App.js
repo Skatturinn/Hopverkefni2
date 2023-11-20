@@ -44,60 +44,88 @@ async function gogn(texti) {
 	}
 	return json;
 }
-console.log(gogn())
-
-// function App() {
-// 	gogn('?search=handmade')
-// 	return (
-// 		<Router>
-// 			<Sidebar />
-// 			<Routes>
-// 				<Route exact path='/data' />
-// 				<Route path='/data/subdata' />
-// 				<Route path='/data/subdata2' />
-// 			</Routes>
-// 		</Router>
-// 	);
-// }
-// import React from "react";
 
 export default function App() {
 	return (
-		<Router>
-			<div>
-				<nav>
-					<ul>
-						<li>
-							<Link to="/">Home</Link>
-						</li>
-						<li>
-							<Link to="/about">About</Link>
-						</li>
-						<li>
-							<Link to="/users">Users</Link>
-						</li>
-					</ul>
-				</nav>
+		<header>
+			<Router>
 
+				<nav>
+					<h1>
+						<Link to="/">Vefforitunarbúðin</Link>
+					</h1>
+					<menu>
+						<li>
+							<Link to="/nyskra">Nýskrá</Link>
+						</li>
+						<li>
+							<Link to="/innskra">Innskrá</Link>
+						</li>
+						<li>
+							<Link to="/karfa">Karfa</Link>
+						</li>
+					</menu>
+					<menu>
+						<li>
+							<Link to="/nyjar">Nýjar vörur</Link>
+						</li>
+						<li>
+							<Link to="/flokkar">Flokkar</Link>
+						</li>
+					</menu>
+				</nav>
 				{/* A <Routes> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
+						renders the first one that matches the current URL. */}
 				<Routes>
-					<Route path="/about" element={<About />}>
-					</Route>
-					<Route path="/users" element={<Users />}>
-						{/* <Users /> */}
-					</Route>
-					<Route path="/" element={<Home />}>
-						{/* <Home /> */}
-					</Route>
+					<Route path="/" element={<Home />} />
+					<Route path="/" element={<Home />} />
+					<Route path="/" element={<Home />} />
+					<Route path="/" element={<Home />} />
+					<Route path="/" element={<Home />} />
+					<Route path="/" element={<Home />} />
 				</Routes>
-			</div>
-		</Router>
+
+			</Router>
+		</header>
 	);
+}
+function re(turn) {
+	return turn
+}
+
+function verify(inntak) {
+	let uttak;
+	if (!inntak) {
+		uttak = '';
+		console.error(`vantar${String(Object.keys({ inntak })[0])}`)
+		return uttak
+	}
+	return inntak
+}
+
+
+async function Kassi(inntak) {
+	const val = await gogn(`/${inntak}`)
+	if (!inntak) {
+		console.error('tokst ekki að sækja vöru.');
+	}
+	const mynd = verify(val.image)
+	return val
+}
+const Mm = async () => {
+	const a = String(Kassi('99'))
+	return (
+		<p>{a}</p>
+
+	)
 }
 
 function Home() {
-	return <h2>Home</h2>;
+	return (
+		<div>
+			<h2>Home</h2>
+			<Mm />
+		</div>);
 }
 
 function About() {
