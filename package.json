@@ -10,7 +10,9 @@
 		"eslint-config-prettier": "^9.0.0",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
+		"react-router-dom": "^6.19.0",
 		"react-scripts": "5.0.1",
+		"sass": "^1.69.5",
 		"stylelint": "^15.11.0",
 		"stylelint-config-sass-guidelines": "^10.0.0",
 		"stylelint-config-standard": "^34.0.0",
@@ -22,7 +24,8 @@
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
 		"prettier": "prettier --write .",
-		"lint": "stylelint ./src/**.css & eslint ./src/**.js"
+		"lint": "stylelint ./src/**.css & eslint ./src/**.js",
+		"sass": "sass styles.scss styles.css -w"
 	},
 	"eslintConfig": {
 		"extends": [
