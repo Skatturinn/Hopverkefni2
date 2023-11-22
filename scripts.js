@@ -24,17 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         loadFrontPage(contentElement);
       }
-  
-    // if(id) {
-      // Product details view
-     // renderDetails(contentElement, id);
-    //} else if (category) {
-      // Category view
-      //renderPage('category', contentElement); // Here 'category' is the type used in your switch case in ui.js
-    //} else {
-      // Frontpage view
-      //renderPage('frontpage', contentElement); // 'frontpage' is the type for the front page
-    //}
   }
 
   function loadFrontPage(parentElement) {
