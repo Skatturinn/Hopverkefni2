@@ -12,6 +12,26 @@ function createElement(tag, attributes, ...children) {
     });
     return element;
   }
+
+  function setLoading(elementId) {
+    const element = document.getElementById(elementId);
+    if (element) {
+      const loadingText = createElement('p', { className: 'loading', style: 'cursor: wait;' }, 'Sækja gögn...');
+      element.appendChild(loadingText);
+    } else {
+      console.error(`Element with ID '${elementId}' not found`);
+    }
+  }
+
+  function setNotLoading(elementId) {
+    const element = document.getElementById(elementId);
+    if (element) {
+      const loadingElements = element.getElementsByClassName('loading');
+      while (loadingElements.length > 0) {
+        loadingElements[0].parentNode.removeChild(loadingElements[0]);
+      }
+    }
+  }
   
   function createProductElement(product) {
     return createElement('div', { className: 'product' },
@@ -24,16 +44,25 @@ function createElement(tag, attributes, ...children) {
     );
   }
   
-  function loadDataFromAPI(apiURL, processFunction) {
+  function loadDataFromAPI(apiURL, processFunction, elementId) {
+    const element = document.getElementById(elementId);
+    setLoading(element);
+  
     fetch(apiURL)
       .then(response => response.json())
-      .then(data => processFunction(data))
-      .catch(error => console.error('Error', error));
+      .then(data => {
+        setNotLoading(element);
+        processFunction(data);
+      })
+      .catch(error => {
+        setNotLoading(element);
+        console.error('Error', error);
+      });
   }
 
   function createHeader() {
     const header = createElement('header', { className: 'main-header' },
-      createElement('h1', { className: 'logo' }, 'Vefforitunarbúðin'),
+      createElement('h1', { className: 'logo', style: 'cursor: pointer;' }, 'Vefforitunarbúðin'),
       createElement('nav', { className: 'main-nav' },
         createElement('ul', {},
           createElement('li', {}, createElement('a', { href: '#new-products' }, 'Nýjar vörur')),
@@ -51,7 +80,7 @@ function createElement(tag, attributes, ...children) {
     loadDataFromAPI('https://vef1-2023-h2-api-791d754dda5b.herokuapp.com/categories', data => {
       const categoriesContainer = document.getElementById('categories');
       data.items.forEach(category => {
-        const categoryDiv = createElement('div', { className: 'category' },
+        const categoryDiv = createElement('div', { className: 'category', style: 'cursor: pointer;' },
           `<h3>${category.title}</h3>`
         );
         categoryDiv.onclick = () => window.location.href = `products.html?category=${category.id}`;
