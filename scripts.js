@@ -122,10 +122,17 @@ function loadProductList() {
       .then(response => response.json())
           .then(data => {
               const productListContainer = document.getElementById('product-list');
+              productListContainer.innerHTML = '';
+
               data.items.forEach(product => {
-                  const productElement = createProductElement(product);
-                  productListContainer.appendChild(productElement);
-              });
+                productListContainer.innerHTML += `
+                    <img src="${product.image}" alt="${product.title}">
+                    <h3>${product.title}</h3>
+                    <p>${product.price}</p>
+                    <p>${product.category_title}</p>
+                `;
+            });
+
       })
       .catch(error => {
           console.error('Error', error);
@@ -167,45 +174,49 @@ function loadProductDetails(productId) {
           console.error('Error', error);
       });
 
+      if (product.category_id) {
+        loadRelatedProducts(product.category_id);
+      }
+
   }
 
 
-function loadRelatedProducts(productId) {
-  const apiURL = `https://vef1-2023-h2-api-791d754dda5b.herokuapp.com/related-products/${productId}`;
-
-  fetch(apiURL)
+  function loadRelatedProducts(categoryId) {
+    const apiURL = `https://vef1-2023-h2-api-791d754dda5b.herokuapp.com/products?limit=3&category=${categoryId}`;
+  
+    fetch(apiURL)
       .then(response => {
-          if (!response.ok) {
-              throw new Error(`Error ${response.status}`);
-          }
-          return response.json();
+        if (!response.ok) {
+          throw new Error(`Error ${response.status}`);
+        }
+        return response.json();
       })
       .then(data => {
-          const products = Array.isArray(data) ? data : data.items;
-          if (!Array.isArray(products)) {
-              throw new Error('Error');
-          }
-
-          const productsContainer = document.getElementById('related-products'); 
-          productsContainer.innerHTML = ''; 
-
-          products.forEach(product => {
-              const productDiv = document.createElement('div');
-              productDiv.className = 'product';
-              productDiv.innerHTML = `
-                  <img src="${product.image}" alt="${product.title}">
-                  <h3>${product.title}</h3>
-                  <p>${product.price}</p>
-                  <p>${product.category_title}</p>
-                  <p>${product.description}</p>
-              `;
-              productsContainer.appendChild(productDiv);
-          });
+        const products = Array.isArray(data) ? data : data.items;
+        if (!Array.isArray(products)) {
+          throw new Error('Error');
+        }
+  
+        const productsContainer = document.getElementById('related-products'); 
+        productsContainer.innerHTML = ''; 
+  
+        products.forEach(product => {
+          const productDiv = document.createElement('div');
+          productDiv.className = 'product';
+          productDiv.innerHTML = `
+              <img src="${product.image}" alt="${product.title}">
+              <h3>${product.title}</h3>
+              <p>${product.price}</p>
+              <p>${product.category_title}</p>
+              <p>${product.description}</p>
+          `;
+          productsContainer.appendChild(productDiv);
+        });
       })
       .catch(error => {
-          console.error('Error', error);
+        console.error('Error', error);
       });
-}
+  }
 
 
 function getQueryParam(param) {
