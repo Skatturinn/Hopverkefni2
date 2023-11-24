@@ -13,17 +13,25 @@ function createElement(tag, attributes, ...children) {
 	return element;
 }
 
+const apisida = 'https://vef1-2023-h2-api-791d754dda5b.herokuapp.com/'
+
 function page(destination) {
 	window.history.pushState({}, '', `/${destination}`)
 	window.history.go()
 }
 
+function heim(el) {
+	const tilbaka = createElement('button', {}, 'til baka á forsíðu');
+	tilbaka.onclick = () => page('')
+	el.appendChild(tilbaka)
+}
+
 function setLoading(element) {
 	if (element) {
-		const loadingText = createElement('p', { className: 'loading', style: 'cursor: wait;' }, 'Sækja gögn...');
+		const loadingText = createElement('p', { className: 'loading' }, 'Sækja gögn...');
 		element.appendChild(loadingText);
 	} else {
-		console.error(`Element with ID '${elementId}' not found`);
+		console.error(`Element with ID '${element}' not found`);
 	}
 }
 
@@ -35,6 +43,7 @@ function setNotLoading(element) {
 		}
 	}
 }
+
 function formatPrice(price) {
 	const formatter = new Intl.NumberFormat('is-IS', {
 		style: 'currency',
@@ -43,20 +52,20 @@ function formatPrice(price) {
 
 	return formatter.format(price);
 }
-function createProductElement(product) {
-	// 	const gamla = createElement('div', { className: 'product' },
-	// 		`<a href="product.html?id=${product.id}">
-	// 	  <img src="${product.image}" alt="${product.title}">
-	// 	  <h3>${product.title}</h3>
-	// 	  <p>${product.price} kr.</p>
-	// 	  <p>${product.category_title}</p>
-	//   </a>`); window.history.pushState({}, '', `/products?=${product.id}`)
-	const nyja = createElement('li', { className: 'product' },
+
+function createProductElement(product, check) {
+	let vara = 'product';
+	const p = createElement('p', {})
+	if (check) {
+		p.textContent = product.description
+		vara = 'product-detail'
+	}
+	const nyja = createElement('li', { className: vara },
 		createElement('img', { src: product.image, alt: 'mynd af vöru' }),
 		createElement('h3', { className: 'titill' }, `${product.title ? product.title : 'vantar nafn vöru'}`),
+		createElement('p', {}, `${product.category_title}`),
 		createElement('p', { className: 'verd' }, `${product.price ? formatPrice(product.price) : 'vantar verð'}`),
-		createElement('p', { className: 'vorulysing' }));
-	// categoryDiv.onclick = () => page(`?category=${category.id}`);
+		p);
 	nyja.onclick = () => page(`?id=${product.id}`)
 	return nyja
 }
@@ -91,12 +100,11 @@ function createHeader(parentEL) {
 			)
 		)
 	);
-	// appendchild
 	parentEL.appendChild(header);
 }
 
-function loadCategories() {
-	loadDataFromAPI('https://vef1-2023-h2-api-791d754dda5b.herokuapp.com/categories', data => {
+function loadCategories(el) {
+	loadDataFromAPI(`${apisida}categories`, data => {
 		const categoriesContainer = createElement('ul', []);
 		data.items.forEach(category => {
 			const categoryDiv = createElement('li',
@@ -107,48 +115,24 @@ function loadCategories() {
 			categoryDiv.onclick = () => page(`?category=${category.id}`);
 			categoriesContainer.appendChild(categoryDiv);
 		});
-		return categoriesContainer
+		el.appendChild(categoriesContainer)
 	});
 }
 
-function loadProducts(limit) {
-	loadDataFromAPI(`https://vef1-2023-h2-api-791d754dda5b.herokuapp.com/products${limit}`, data => {
-		// const productsContainer = document.getElementById('new-products'); gamla
-		const productsContainer = createElement('ul', {})
+function loadProducts(el, limit, bin) {
+	const productsContainer = createElement('ul', {})
+	loadDataFromAPI(`${apisida}products${limit}`, data => {
 		data.items.forEach(product => productsContainer.appendChild(createProductElement(product)));
-		return productsContainer
+		el.appendChild(productsContainer)
 	});
+	if (bin) {
+		heim(el)
+	}
 }
 
-function loadRelatedProducts(categoryId) {
-	loadDataFromAPI(`https://vef1-2023-h2-api-791d754dda5b.herokuapp.com/products?limit=3&category=${categoryId}`, data => {
-		const relatedProductsContainer = document.getElementById('related-products');
-		data.items.forEach(product => relatedProductsContainer.appendChild(createProductElement(product)));
-	});
-}
-
-function loadProductDetails(productId) {
-	loadDataFromAPI(`https://vef1-2023-h2-api-791d754dda5b.herokuapp.com/products/${productId}`, product => {
-		const productDetailsContainer = document.getElementById('product-details');
-		productDetailsContainer.innerHTML = `
-          <img src="${product.image}" alt="${product.title}">
-          <h3>${product.title}</h3>
-          <p>${product.price} kr.</p>
-          <p>${product.category_title}</p>
-          <p>${product.description}</p>
-      `;
-		loadRelatedProducts(product.category_id);
-	});
-}
-
-function loadProductsByCategory(categoryId) {
-	const apiURL = `https://vef1-2023-h2-api-791d754dda5b.herokuapp.com/products?category=${categoryId}`;
-	loadDataFromAPI(apiURL, data => {
-		const productsContainer = document.getElementById('products');
-		productsContainer.innerHTML = '';
-		data.items.forEach(product => {
-			productsContainer.appendChild(createProductElement(product));
-		});
+function loadProductDetails(el, productId) {
+	loadDataFromAPI(`${apisida}products/${productId}`, product => {
+		el.appendChild(createProductElement(product, true));
 	});
 }
 
@@ -156,24 +140,39 @@ function initializePage() {
 	const parentElement = document.body;
 	createHeader(parentElement);
 	const mainEl = parentElement?.appendChild(createElement('main', {}))
+	const efriHluti = createElement('section', { className: 'efri' });
+	const nedriHluti = createElement('section', { className: 'neðri' });
 	const urlParams = new URLSearchParams(window.location.search);
 	const productId = urlParams.get('id');
 	const categoryId = urlParams.get('category');
 	setLoading(mainEl)
+	const midja = createElement('div', {})
 	if (productId) {
-		loadProductDetails(productId);
+		loadProductDetails(efriHluti, productId);
+		loadProducts(nedriHluti, `?limit=3&category=${categoryId}`, true)
 	} else if (categoryId) {
-		loadProductsByCategory(categoryId);
-	} else if (window.location.pathname === '/') {
-		loadProducts('?limit=6');
-		loadCategories()
-	} else if (window.location.pathname.includes('vorulisti.html')) {
-		loadProducts();
+		let param = `?category=${categoryId}`;
+		if (categoryId === String(0)) {
+			param = '';
+		}
+		loadProducts(efriHluti, param, true);
+	} else {
+		efriHluti.appendChild(createElement('h2', {}, 'Nýjar vörur'))
+		loadProducts(efriHluti, '?limit=6')
+		const takki = createElement('button', {}, 'Skoða alla vörur');
+		takki.onclick = () => page('?category=0')
+		midja.appendChild(takki) // Þetta er fáranleg aðferð til að laga uppsetninguna á takkanum
+		nedriHluti.appendChild(createElement('h2', {}, 'Skoðaðu vöruflokkana okkar'))
+		loadCategories(nedriHluti)
 	}
+	setNotLoading(mainEl)
+	mainEl.appendChild(efriHluti)
+	mainEl.appendChild(midja)
+	mainEl.appendChild(nedriHluti)
 }
 
 window.onpopstate = () => {
 	window.history.go()
-	// window.location.reload()
 };
+
 document.addEventListener('DOMContentLoaded', initializePage);
