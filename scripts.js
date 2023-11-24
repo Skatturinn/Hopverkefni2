@@ -28,6 +28,7 @@ function heim(el) {
 
 function setLoading(element) {
 	if (element) {
+		element.setAttribute('class', 'loading')
 		const loadingText = createElement('p', { className: 'loading' }, 'Sækja gögn...');
 		element.appendChild(loadingText);
 	} else {
@@ -37,6 +38,7 @@ function setLoading(element) {
 
 function setNotLoading(element) {
 	if (element) {
+		element.removeAttribute('class')
 		const loadingElements = element.getElementsByClassName('loading');
 		while (loadingElements.length > 0) {
 			loadingElements[0].parentNode.removeChild(loadingElements[0]);
@@ -177,7 +179,7 @@ function initializePage() {
 		if (skoda !== 'categories') {
 			efriHluti.appendChild(createElement('h2', {}, 'Nýjar vörur'))
 			loadProducts(efriHluti, '?limit=6')
-			const takki = createElement('button', {}, 'Skoða alla vörur');
+			const takki = createElement('button', {}, 'Skoða allar vörur');
 			takki.onclick = () => page('?category=0&title=Allar')
 			midja.appendChild(takki) // Þetta er fáranleg aðferð til að laga uppsetninguna á takkanum
 		}
@@ -192,10 +194,10 @@ function initializePage() {
 	if (productId || categoryId || skoda) {
 		heim(nedriHluti)
 	}
-	setNotLoading(mainEl)
 	mainEl.appendChild(efriHluti)
 	mainEl.appendChild(midja)
 	mainEl.appendChild(nedriHluti)
+	setNotLoading(mainEl)
 }
 
 window.onpopstate = () => {
