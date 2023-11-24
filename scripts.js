@@ -165,6 +165,9 @@ function initializePage() {
 		nedriHluti.appendChild(createElement('h2', {}, 'Skoðaðu vöruflokkana okkar'))
 		loadCategories(nedriHluti)
 	}
+	if (productId && categoryId) {
+		heim(nedriHluti)
+	}
 	setNotLoading(mainEl)
 	mainEl.appendChild(efriHluti)
 	mainEl.appendChild(midja)
