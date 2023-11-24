@@ -125,9 +125,6 @@ function loadProducts(el, limit, bin) {
 		data.items.forEach(product => productsContainer.appendChild(createProductElement(product)));
 		el.appendChild(productsContainer)
 	});
-	if (bin) {
-		heim(el)
-	}
 }
 
 function loadProductDetails(el, productId) {
@@ -150,12 +147,14 @@ function initializePage() {
 	if (productId) {
 		loadProductDetails(efriHluti, productId);
 		loadProducts(nedriHluti, `?limit=3&category=${categoryId}`, true)
+		heim(nedriHluti)
 	} else if (categoryId) {
 		let param = `?category=${categoryId}`;
 		if (categoryId === String(0)) {
 			param = '';
 		}
 		loadProducts(efriHluti, param, true);
+		heim(nedriHluti)
 	} else {
 		efriHluti.appendChild(createElement('h2', {}, 'Nýjar vörur'))
 		loadProducts(efriHluti, '?limit=6')
@@ -164,9 +163,6 @@ function initializePage() {
 		midja.appendChild(takki) // Þetta er fáranleg aðferð til að laga uppsetninguna á takkanum
 		nedriHluti.appendChild(createElement('h2', {}, 'Skoðaðu vöruflokkana okkar'))
 		loadCategories(nedriHluti)
-	}
-	if (productId && categoryId) {
-		heim(nedriHluti)
 	}
 	setNotLoading(mainEl)
 	mainEl.appendChild(efriHluti)
