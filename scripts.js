@@ -1,7 +1,9 @@
 function createElement(tag, attributes, ...children) {
 	const element = document.createElement(tag);
 	for (const key in attributes) {
-		element[key] = attributes[key];
+		if (Object.prototype.hasOwnProperty.call(attributes, key)) {
+			element[key] = attributes[key];
+		}
 	}
 	children.forEach(child => {
 		if (typeof child === 'string') {
