@@ -62,8 +62,10 @@ function createProductElement(product, check) {
     nyja.appendChild(createElement('img', { src: product.image, alt: 'mynd af vöru' }));
 
     const title = createElement('h3', { className: 'titill' }, product.title || 'vantar nafn vöru');
-    const flokk = createElement('p', { className: 'flokk' }, product.category_title || 'vantar nafn á flokki');
-    const verd = createElement('p', { className: 'verd' }, product.price ? formatPrice(product.price) : 'vantar verð');
+    const flokk = createElement('p', { className: 'flokk' }, 
+		product.category_title || 'vantar nafn á flokki');
+    const verd = createElement('p', { className: 'verd' }, 
+		product.price ? formatPrice(product.price) : 'vantar verð');
 
     if (check) {
         vara = 'product-detail';
