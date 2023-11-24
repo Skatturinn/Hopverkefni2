@@ -119,7 +119,7 @@ function loadCategories(el) {
 	});
 }
 
-function loadProducts(el, limit, bin) {
+function loadProducts(el, limit) {
 	const productsContainer = createElement('ul', {})
 	loadDataFromAPI(`${apisida}products${limit}`, data => {
 		data.items.forEach(product => productsContainer.appendChild(createProductElement(product)));
