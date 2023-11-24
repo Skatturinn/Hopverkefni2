@@ -62,15 +62,15 @@ function createProductElement(product, check) {
 	}
 	const nyja = createElement('li', { className: vara },
 		createElement('img', { src: product.image, alt: 'mynd af vöru' }),
-		createElement('h3', { className: 'titill' }, `${product.title ? product.title : 'vantar nafn vöru'}`),
-		createElement('p', {}, `${product.category_title}`),
+		createElement('h3', { className: 'titill' }, `${product.title || 'vantar nafn vöru'}`),
+		createElement('p', { className: 'flokk' }, `${product.category_title || 'vantar nafn á flokki'}`),
 		createElement('p', { className: 'verd' }, `${product.price ? formatPrice(product.price) : 'vantar verð'}`),
 		p);
-	nyja.onclick = () => page(`?id=${product.id}`)
+	nyja.onclick = () => page(`?category=${product.category_id}&title=${product.category_title}&id=${product.id}`)
 	return nyja
 }
 
-function loadDataFromAPI(apiURL, processFunction) {
+async function loadDataFromAPI(apiURL, processFunction) {
 	fetch(apiURL)
 		.then(response => response.json())
 		.then(data => {
@@ -87,16 +87,33 @@ function createHeader(parentEL) {
 		{ className: 'logo', },
 		'Vefforitunarbúðin');
 	logo.onclick = () => page('')
+	const nyjar = createElement('a', {},
+		'Nýjar vörur')
+	nyjar.onclick = () => page('?skoda=nyjar-vorur')
+	const flokkar = createElement('a', { href: '?skoda=categories' },
+		'Flokkar')
+	flokkar.onclick = () => page('?skoda=categories')
 	const header = createElement('header', { className: 'main-header' },
 		logo,
-		createElement('nav', { className: 'main-nav' },
+		createElement('nav', { className: 'site-nav' },
 			createElement('ul', {},
 				createElement('li', {},
-					createElement('a', { href: '#new-products' },
-						'Nýjar vörur')),
+					nyjar
+				),
 				createElement('li', {},
-					createElement('a', { href: '#categories' },
-						'Flokkar'))
+					flokkar)
+			)
+		)
+		createElement('nac', { className: 'user-nac' },
+			createElement('ol', {},
+				createElement('li', {},
+					createElement('a', {}, 'Nýskrá')
+				),
+				createElement('li', {},
+					createElement('a', {}, 'Innskrá')
+				), createElement('li', {},
+					createElement('a', {}, 'Karfa')
+				)
 			)
 		)
 	);
@@ -109,10 +126,9 @@ function loadCategories(el) {
 		data.items.forEach(category => {
 			const categoryDiv = createElement('li',
 				{ className: 'category' },
-				createElement('h3', {}, `${category.title ? category.title : 'vantar nafn á flokki'}`)
+				createElement('h3', {}, `${category.title || 'vantar nafn á flokki'}`)
 			);
-			// categoryDiv.addEventListener('click', page(`/categories?id=${category.id}`))
-			categoryDiv.onclick = () => page(`?category=${category.id}`);
+			categoryDiv.onclick = () => page(`?category=${category.id}&title=${category.title}`);
 			categoriesContainer.appendChild(categoryDiv);
 		});
 		el.appendChild(categoriesContainer)
@@ -142,27 +158,36 @@ function initializePage() {
 	const urlParams = new URLSearchParams(window.location.search);
 	const productId = urlParams.get('id');
 	const categoryId = urlParams.get('category');
+	const categoryTitle = urlParams.get('title');
+	const skoda = urlParams.get('skoda');
 	setLoading(mainEl)
 	const midja = createElement('div', {})
 	if (productId) {
 		loadProductDetails(efriHluti, productId);
-		loadProducts(nedriHluti, `?limit=3&category=${categoryId}`, true)
-		heim(nedriHluti)
+		nedriHluti.appendChild(createElement('h2', {}, `Meira úr flokknum ${String(categoryTitle || 'vantar nafn flokks')}`))
+		loadProducts(nedriHluti, `?limit=3&category=${categoryId}`)
 	} else if (categoryId) {
 		let param = `?category=${categoryId}`;
 		if (categoryId === String(0)) {
 			param = '';
 		}
-		loadProducts(efriHluti, param, true);
+		efriHluti.appendChild(createElement('h2', {}, `${`${categoryTitle} vörur` || 'Vörur'}`))
+		loadProducts(efriHluti, param);
+	} else if (window.location.pathname === '/') {
+		if (skoda !== 'categories') {
+			efriHluti.appendChild(createElement('h2', {}, 'Nýjar vörur'))
+			loadProducts(efriHluti, '?limit=6')
+			const takki = createElement('button', {}, 'Skoða alla vörur');
+			takki.onclick = () => page('?category=0&title=Allar')
+			midja.appendChild(takki) // Þetta er fáranleg aðferð til að laga uppsetninguna á takkanum
+		}
+		if (skoda !== 'nyjar-vorur') {
+			nedriHluti.appendChild(createElement('h2', {}, 'Skoðaðu vöruflokkana okkar'))
+			loadCategories(nedriHluti)
+		}
+	}
+	if (productId || categoryId || skoda) {
 		heim(nedriHluti)
-	} else {
-		efriHluti.appendChild(createElement('h2', {}, 'Nýjar vörur'))
-		loadProducts(efriHluti, '?limit=6')
-		const takki = createElement('button', {}, 'Skoða alla vörur');
-		takki.onclick = () => page('?category=0')
-		midja.appendChild(takki) // Þetta er fáranleg aðferð til að laga uppsetninguna á takkanum
-		nedriHluti.appendChild(createElement('h2', {}, 'Skoðaðu vöruflokkana okkar'))
-		loadCategories(nedriHluti)
 	}
 	setNotLoading(mainEl)
 	mainEl.appendChild(efriHluti)
@@ -174,4 +199,4 @@ window.onpopstate = () => {
 	window.history.go()
 };
 
-document.addEventListener('DOMContentLoaded', initializePage);
+initializePage()
