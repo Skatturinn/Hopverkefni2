@@ -103,8 +103,8 @@ function createHeader(parentEL) {
 				createElement('li', {},
 					flokkar)
 			)
-		)
-		createElement('nac', { className: 'user-nac' },
+		),
+		createElement('nav', { className: 'user-nac' },
 			createElement('ol', {},
 				createElement('li', {},
 					createElement('a', {}, 'Nýskrá')
@@ -182,8 +182,13 @@ function initializePage() {
 			midja.appendChild(takki) // Þetta er fáranleg aðferð til að laga uppsetninguna á takkanum
 		}
 		if (skoda !== 'nyjar-vorur') {
-			nedriHluti.appendChild(createElement('h2', {}, 'Skoðaðu vöruflokkana okkar'))
-			loadCategories(nedriHluti)
+			if (!skoda) {
+				nedriHluti.appendChild(createElement('h2', {}, 'Skoðaðu vöruflokkana okkar'))
+				loadCategories(nedriHluti)
+			} else {
+				efriHluti.appendChild(createElement('h2', {}, 'Skoðaðu vöruflokkana okkar'))
+				loadCategories(efriHluti)
+			}
 		}
 	}
 	if (productId || categoryId || skoda) {
