@@ -1,12 +1,12 @@
 {
-  "name": "eslint",
-  "version": "1.0.0",
-  "description": "Hopverkefni2",
-  "main": ".eslintrc.js",
-  "scripts": {
-    "lint": "stylelint ./src/**.css & eslint ./src/**.js",
-	"prettier": "prettier --write ."
-  },
-  "author": "",
-  "license": "ISC"
+	"name": "eslint",
+	"version": "1.0.0",
+	"description": "Hopverkefni2",
+	"main": ".eslintrc.js",
+	"scripts": {
+		"lint": "stylelint ./**.css & eslint ./**.js",
+		"prettier": "prettier --write ."
+	},
+	"author": "",
+	"license": "ISC"
 }
