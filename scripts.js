@@ -152,7 +152,7 @@ function loadProductDetails(el, productId) {
 function initializePage() {
 	const parentElement = document.body;
 	createHeader(parentElement);
-	const mainEl = parentElement?.appendChild(createElement('main', {}))
+	const mainEl = parentElement?.appendChild(createElement('main', { id: 'efni' }))
 	const efriHluti = createElement('section', { className: 'efri' });
 	const nedriHluti = createElement('section', { className: 'neðri' });
 	const urlParams = new URLSearchParams(window.location.search);
@@ -182,13 +182,11 @@ function initializePage() {
 			midja.appendChild(takki) // Þetta er fáranleg aðferð til að laga uppsetninguna á takkanum
 		}
 		if (skoda !== 'nyjar-vorur') {
-			if (!skoda) {
-				nedriHluti.appendChild(createElement('h2', {}, 'Skoðaðu vöruflokkana okkar'))
-				loadCategories(nedriHluti)
-			} else {
-				efriHluti.appendChild(createElement('h2', {}, 'Skoðaðu vöruflokkana okkar'))
-				loadCategories(efriHluti)
-			}
+			let hluti = nedriHluti
+			if (skoda) {
+				hluti = efriHluti
+			} hluti.appendChild(createElement('h2', {}, 'Skoðaðu vöruflokkana okkar'))
+			loadCategories(hluti)
 		}
 	}
 	if (productId || categoryId || skoda) {
