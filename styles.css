@@ -15,6 +15,7 @@ header {
     color: #fff; 
     padding: 20px 0;
     text-align: center;
+    margin-bottom: 20px;
 }
 
 nav a {
@@ -67,18 +68,20 @@ nav a {
     margin-top: auto; 
 }
 
-.fp-button {
+.vorur-link {
     background-color: #000;
     color: #fff;
-    padding: 10px 20px;
-    border: none;
+    text-decoration: none;
+    padding: 10px;
+    border: 2rem;
     cursor: pointer;
     text-align: left; 
 }
 
 .categories-title {
     text-align: left;
-    margin: 20px 0;
+    margin: 20px 0px;
+    
 }
 
 #categories {
@@ -103,4 +106,3 @@ nav a {
     font-size: 1.5em;
     color: #333;
   }
-
