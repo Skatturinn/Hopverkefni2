@@ -1,16 +1,18 @@
 function createElement(tag, attributes, ...children) {
-	const element = document.createElement(tag);
-	for (const key in attributes) {
-		element[key] = attributes[key];
-	}
-	children.forEach(child => {
-		if (typeof child === 'string') {
-			element.innerHTML += child;
-		} else {
-			element.appendChild(child);
-		}
-	});
-	return element;
+    const element = document.createElement(tag);
+    for (const key in attributes) {
+        if (Object.prototype.hasOwnProperty.call(attributes, key)) {
+            element[key] = attributes[key];
+        }
+    }
+    children.forEach(child => {
+        if (typeof child === 'string') {
+            element.innerHTML += child;
+        } else {
+            element.appendChild(child);
+        }
+    });
+    return element;
 }
 
 function page(destination) {
@@ -23,7 +25,8 @@ function setLoading(element) {
 		const loadingText = createElement('p', { className: 'loading', style: 'cursor: wait;' }, 'Sækja gögn...');
 		element.appendChild(loadingText);
 	} else {
-		console.error(`Element with ID '${elementId}' not found`);
+		// console.error(`Element with ID '${elementId}' not found`);
+		console.error('Element not found');
 	}
 }
 
@@ -53,8 +56,10 @@ function createProductElement(product) {
 	//   </a>`); window.history.pushState({}, '', `/products?=${product.id}`)
 	const nyja = createElement('li', { className: 'product' },
 		createElement('img', { src: product.image, alt: 'mynd af vöru' }),
-		createElement('h3', { className: 'titill' }, `${product.title ? product.title : 'vantar nafn vöru'}`),
-		createElement('p', { className: 'verd' }, `${product.price ? formatPrice(product.price) : 'vantar verð'}`),
+		createElement('h3', { className: 'titill' }, 
+			`${product.title ? product.title : 'vantar nafn vöru'}`),
+		createElement('p', { className: 'verd' }, 
+			`${product.price ? formatPrice(product.price) : 'vantar verð'}`),
 		createElement('p', { className: 'vorulysing' }));
 	// categoryDiv.onclick = () => page(`?category=${category.id}`);
 	nyja.onclick = () => page(`?id=${product.id}`)
@@ -66,9 +71,11 @@ function loadDataFromAPI(apiURL, processFunction) {
 		.then(response => response.json())
 		.then(data => {
 			processFunction(data);
+			setNotLoading();
 		})
 		.catch(error => {
 			console.error('Error', error);
+			setNotLoading();
 		});
 }
 
@@ -139,6 +146,7 @@ function loadProductDetails(productId) {
       `;
 		loadRelatedProducts(product.category_id);
 	});
+	
 }
 
 function loadProductsByCategory(categoryId) {
@@ -174,6 +182,6 @@ function initializePage() {
 
 window.onpopstate = () => {
 	window.history.go()
-	// window.location.reload()
+	// swindow.location.reload()
 };
 document.addEventListener('DOMContentLoaded', initializePage);
