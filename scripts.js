@@ -1,9 +1,9 @@
 function createElement(tag, attributes, ...children) {
-	const element = document.createElement(tag);
+const element = document.createElement(tag);
 	for (const key in attributes) {
-		if (Object.prototype.hasOwnProperty.call(attributes, key)) {
-			element[key] = attributes[key];
-		}
+		if (Object.prototype.hasOwnProperty.call(attributes, key)) { 
+            element[key] = attributes[key];
+        }
 	}
 	children.forEach(child => {
 		if (typeof child === 'string') {
@@ -22,6 +22,7 @@ function page(destination) {
 	window.history.go()
 }
 
+
 function heim(el) {
 	const tilbaka = createElement('button', {}, 'til baka á forsíðu');
 	tilbaka.onclick = () => page('')
@@ -30,7 +31,6 @@ function heim(el) {
 
 function setLoading(element) {
 	if (element) {
-		element.setAttribute('class', 'loading')
 		const loadingText = createElement('p', { className: 'loading' }, 'Sækja gögn...');
 		element.appendChild(loadingText);
 	} else {
@@ -40,7 +40,6 @@ function setLoading(element) {
 
 function setNotLoading(element) {
 	if (element) {
-		element.removeAttribute('class')
 		const loadingElements = element.getElementsByClassName('loading');
 		while (loadingElements.length > 0) {
 			loadingElements[0].parentNode.removeChild(loadingElements[0]);
@@ -59,19 +58,36 @@ function formatPrice(price) {
 
 function createProductElement(product, check) {
 	let vara = 'product';
-	const p = createElement('p', {})
-	if (check) {
-		p.textContent = product.description
-		vara = 'product-detail'
-	}
-	const nyja = createElement('li', { className: vara },
-		createElement('img', { src: product.image, alt: 'mynd af vöru' }),
-		createElement('h3', { className: 'titill' }, `${product.title || 'vantar nafn vöru'}`),
-		createElement('p', { className: 'flokk' }, `${product.category_title || 'vantar nafn á flokki'}`),
-		createElement('p', { className: 'verd' }, `${product.price ? formatPrice(product.price) : 'vantar verð'}`),
-		p);
-	nyja.onclick = () => page(`?category=${product.category_id}&title=${product.category_title}&id=${product.id}`)
-	return nyja
+    const nyja = createElement('li', { className: vara });
+    nyja.appendChild(createElement('img', { src: product.image, alt: 'mynd af vöru' }));
+
+    const title = createElement('h3', { className: 'titill' }, product.title || 'vantar nafn vöru');
+    const flokk = createElement('p', { className: 'flokk' }, 
+		product.category_title || 'vantar nafn á flokki');
+    const verd = createElement('p', { className: 'verd' }, 
+		product.price ? formatPrice(product.price) : 'vantar verð');
+
+    if (check) {
+        vara = 'product-detail';
+        nyja.className = vara;
+
+        const detailsDiv = createElement('div', { className: 'details' });
+        detailsDiv.appendChild(title);
+        detailsDiv.appendChild(flokk);
+        detailsDiv.appendChild(verd);
+
+        const description = createElement('p', {}, product.description);
+        detailsDiv.appendChild(description);
+
+        nyja.appendChild(detailsDiv);
+    } else {
+        nyja.appendChild(title);
+        nyja.appendChild(flokk);
+        nyja.appendChild(verd);
+    }
+
+    nyja.onclick = () => page(`?category=${product.category_id}&title=${product.category_title}&id=${product.id}`);
+    return nyja;
 }
 
 async function loadDataFromAPI(apiURL, processFunction) {
@@ -156,7 +172,7 @@ function loadProductDetails(el, productId) {
 function initializePage() {
 	const parentElement = document.body;
 	createHeader(parentElement);
-	const mainEl = parentElement?.appendChild(createElement('main', { id: 'efni' }))
+	const mainEl = parentElement?.appendChild(createElement('main', {}))
 	const efriHluti = createElement('section', { className: 'efri' });
 	const nedriHluti = createElement('section', { className: 'neðri' });
 	const urlParams = new URLSearchParams(window.location.search);
@@ -181,25 +197,27 @@ function initializePage() {
 		if (skoda !== 'categories') {
 			efriHluti.appendChild(createElement('h2', {}, 'Nýjar vörur'))
 			loadProducts(efriHluti, '?limit=6')
-			const takki = createElement('button', {}, 'Skoða allar vörur');
+			const takki = createElement('button', { className: 'btn' }, 'Skoða alla vörur');
 			takki.onclick = () => page('?category=0&title=Allar')
 			midja.appendChild(takki) // Þetta er fáranleg aðferð til að laga uppsetninguna á takkanum
 		}
 		if (skoda !== 'nyjar-vorur') {
-			let hluti = nedriHluti
-			if (skoda) {
-				hluti = efriHluti
-			} hluti.appendChild(createElement('h2', {}, 'Skoðaðu vöruflokkana okkar'))
-			loadCategories(hluti)
+			if (!skoda) {
+				nedriHluti.appendChild(createElement('h2', {}, 'Skoðaðu vöruflokkana okkar'))
+				loadCategories(nedriHluti);
+			} else {
+				efriHluti.appendChild(createElement('h2', {}, 'Skoðaðu vöruflokkana okkar'))
+				loadCategories(efriHluti)
+			}
 		}
 	}
 	if (productId || categoryId || skoda) {
 		heim(nedriHluti)
 	}
+	setNotLoading(mainEl)
 	mainEl.appendChild(efriHluti)
 	mainEl.appendChild(midja)
 	mainEl.appendChild(nedriHluti)
-	setNotLoading(mainEl)
 }
 
 window.onpopstate = () => {
