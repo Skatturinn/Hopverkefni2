@@ -25,3 +25,11 @@
 	grid-column: 2;
 	margin: 0 0 10px;
 }
+
+.btn {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 20px;
+	padding: 0;
+	list-style-type: none;
+}
