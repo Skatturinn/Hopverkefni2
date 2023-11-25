@@ -60,14 +60,6 @@ main > div > button {
   margin: 0 0 10px;
 }
 
-.btn {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 20px;
-  padding: 0;
-  list-style-type: none;
-}
-
 header {
   background-color: #000;
   color: #fff;
@@ -90,11 +82,13 @@ li a {
   cursor: pointer;
 }
 
-.efri, .neðri {
+.efri,
+.neðri {
   padding: 0 20px;
 }
 
-.efri h2, .nedri h2 {
+.efri h2,
+.nedri h2 {
   display: grid;
   grid-column: span 2;
   grid-row: span 2;
@@ -165,11 +159,6 @@ button {
   border: none;
   cursor: pointer;
   text-align: left;
-}
-
-.btn {
-  margin-left: 20px;
-  cursor: pointer;
 }
 
 .verd {
