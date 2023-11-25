@@ -4,15 +4,22 @@
 	"description": "Hopverkefni2",
 	"main": ".eslintrc.js",
 	"scripts": {
-		"lint": "stylelint ./**.css & eslint ./**.js",
+		"browser-sync": "browser-sync start --server --files index.html styles.css",
+		"lint": "stylelint \"./**/*.css\" --fix & eslint \"./**/*.js\" --fix",
+		"sass": "sass styles.scss styles.css -w",
+		"dev": "concurrently npm:sass npm:browser-sync",
 		"prettier": "prettier --write ."
 	},
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
+		"concurrently": "^8.2.2",
+		"cpy-cli": "^5.0.0",
 		"eslint": "^8.54.0",
 		"eslint-config-airbnb-base": "^15.0.0",
 		"eslint-config-prettier": "^9.0.0",
+		"prettier": "^3.1.0",
+		"sass": "^1.69.5",
 		"stylelint": "^15.11.0",
 		"stylelint-config-sass-guidelines": "^10.0.0",
 		"stylelint-config-standard": "^34.0.0"
