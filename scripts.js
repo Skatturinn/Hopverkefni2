@@ -9,7 +9,7 @@ function initializePage() {
 	createHeader(parentElement);
 	const mainEl = parentElement?.appendChild(createElement('main', { id: 'efni' }))
 	const efriHluti = createElement('section', { className: 'efri' });
-	const nedriHluti = createElement('section', { className: 'neðri' });
+	const nedriHluti = createElement('section', { className: 'nedri' });
 	const urlParams = new URLSearchParams(window.location.search);
 	const productId = urlParams.get('id');
 	const categoryId = urlParams.get('category');
