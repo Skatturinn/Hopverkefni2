@@ -145,10 +145,27 @@ li a {
 }
 
 .product-detail img {
-  height: 400px;
+  max-height: 400px;
   grid-row: span 4;
+  max-width: 50vw;
+  align-self: center;
+  justify-self: center;
 }
 
+.product-detail h3 {
+  min-width: 30vw;
+}
+
+@media (max-width: 700px) {
+  .product-detail img {
+    grid-column: span 1;
+    min-width: 100%;
+  }
+  .product-detail p,
+  .product-detail h3 {
+    grid-column: 1;
+  }
+}
 button {
   background-color: #000;
   color: #fff;
