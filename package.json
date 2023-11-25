@@ -8,7 +8,11 @@
 		"lint": "stylelint \"./**/*.css\" --fix & eslint \"./**/*.js\" --fix",
 		"sass": "sass styles.scss styles.css -w",
 		"dev": "concurrently npm:sass npm:browser-sync",
-		"prettier": "prettier --write ."
+		"prettier": "prettier --write .",
+		"copy:html": "cpy ./*.html ./build/",
+		"copy:jslib": "cpy ./lib/*.js ./build/",
+		"copy:css": "cpy ./styles.css ./build/",
+		"build": "concurrently npm:copy:*"
 	},
 	"author": "",
 	"license": "ISC",
