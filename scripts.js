@@ -16,7 +16,7 @@ function initializePage() {
 	const categoryTitle = urlParams.get('title');
 	const skoda = urlParams.get('skoda');
 	setLoading(mainEl)
-	const midja = createElement('div', { className: 'neðri' })
+	const midja = createElement('div', { className: 'nedri' })
 	if (productId) {
 		loadProductDetails(efriHluti, productId);
 		nedriHluti.appendChild(createElement('h2', {}, `Meira úr flokknum ${String(categoryTitle || 'vantar nafn flokks')}`))
