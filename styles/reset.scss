@@ -16,11 +16,6 @@ main>div {
 	max-width: 1440px;
 }
 
-main>section>*,
-main>div>button {
-	padding-right: 15px;
-}
-
 .sr-only:not(:focus, :active) {
 	clip: rect(0 0 0 0);
 	clip-path: inset(50%);
