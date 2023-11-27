@@ -4,7 +4,7 @@ import { loadProductDetails, loadProducts, loadCategories } from './lib/loadProd
 import { page, heim } from './lib/page.js'
 import { setLoading, setNotLoading } from './lib/setLoading.js';
 
-function initializePage() {
+async function initializePage() {
 	const parentElement = document.body;
 	createHeader(parentElement);
 	const mainEl = parentElement?.appendChild(createElement('main', { id: 'efni' }))
@@ -19,20 +19,20 @@ function initializePage() {
 	const midja = createElement('div', { className: 'nedri' })
 	const botn = createElement('div', { className: 'nedri' })
 	if (productId) {
-		loadProductDetails(efriHluti, productId);
+		await loadProductDetails(efriHluti, productId);
 		nedriHluti.appendChild(createElement('h2', {}, `Meira úr flokknum ${String(categoryTitle || 'vantar nafn flokks')}`))
-		loadProducts(nedriHluti, `?limit=3&category=${categoryId}`)
+		await loadProducts(nedriHluti, `?limit=3&category=${categoryId}`)
 	} else if (categoryId) {
 		let param = `?category=${categoryId}`;
 		if (categoryId === String(0)) {
 			param = '';
 		}
 		efriHluti.appendChild(createElement('h2', {}, `${`${categoryTitle} vörur` || 'Vörur'}`))
-		loadProducts(efriHluti, param);
+		await loadProducts(efriHluti, param);
 	} else {
 		if (skoda !== 'categories') {
 			efriHluti.appendChild(createElement('h2', {}, 'Nýjar vörur'))
-			loadProducts(efriHluti, '?limit=6')
+			await loadProducts(efriHluti, '?limit=6')
 			const takki = createElement('button', {}, 'Skoða allar vörur');
 			takki.onclick = () => page('?category=0&title=Allar')
 			midja.appendChild(takki) // Þetta er fáranleg aðferð til að laga uppsetninguna á takkanum
@@ -42,7 +42,7 @@ function initializePage() {
 			if (skoda) {
 				hluti = efriHluti
 			} hluti.appendChild(createElement('h2', {}, 'Skoðaðu vöruflokkana okkar'))
-			loadCategories(hluti)
+			await loadCategories(hluti)
 		}
 	}
 	if (productId || categoryId || skoda) {
