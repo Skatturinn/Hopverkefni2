@@ -7,8 +7,9 @@
 	justify-self: center;
 }
 
-.product-detail h3 {
-	min-width: 30vw;
+.product-detail h3,
+.product-detail p {
+	min-width: 30%;
 }
 
 @media (max-width: 700px) {
